@@ -1,0 +1,23 @@
+{
+  "name": "master-password",
+  "version": "1.0.0",
+  "description": "Organize passwords in Node",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jbaltres/master-password.git"
+  },
+  "author": "Juergen Baltres",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jbaltres/master-password/issues"
+  },
+  "homepage": "https://github.com/jbaltres/master-password#readme",
+  "devDependencies": {
+    "eslint": "^6.5.0",
+    "prettier": "^1.18.2"
+  }
+}
