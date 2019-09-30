@@ -1,0 +1,23 @@
+{
+  "name": "master-password",
+  "version": "1.0.0",
+  "description": "Some description",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joseteranc/master-password.git"
+  },
+  "author": "Jose",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/joseteranc/master-password/issues"
+  },
+  "homepage": "https://github.com/joseteranc/master-password#readme",
+  "devDependencies": {
+    "eslint": "^6.5.0",
+    "prettier": "^1.18.2"
+  }
+}
