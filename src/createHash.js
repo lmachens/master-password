@@ -1,4 +1,5 @@
 const crypto = require("crypto");
+const fs = require("fs");
 
 function hashPassword(password) {
   const salt = crypto.randomBytes(16).toString("hex");
@@ -8,5 +9,5 @@ function hashPassword(password) {
   return [salt, hash].join("$");
 }
 
-console.log(hashPassword(process.argv[2]));
-// instead of logging the hashed password, save it in a file. don't forget to gitignore this file.
+const hashedPassword = hashPassword(process.argv[2]);
+fs.writeFileSync(".password", hashedPassword);
