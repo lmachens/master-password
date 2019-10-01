@@ -4,7 +4,7 @@ Simple secrets manager for Node.js.
 
 ## First start
 
-You need to generate a master password, which is used to encrypt the secrets.
+You need to generate a master password, which is used to encrypt the secrets. The hashed password is saved in a file called `.password`
 
 ```
 node src/createHash.js YOUR_MASTER_PASSWORD
