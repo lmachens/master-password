@@ -17,7 +17,10 @@ const masterPasswordHash = fs.readFileSync(".password", "utf-8");
 rl.question("What is the master password? ", password => {
   rl.output.write("\n");
   if (verifyHash(password, masterPasswordHash)) {
-    executeCommand(password, action, key, value);
+    const result = executeCommand(password, action, key, value);
+    if (result) {
+      console.log(result);
+    }
   } else {
     console.log("Invalid master password!");
   }
