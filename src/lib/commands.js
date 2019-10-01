@@ -1,21 +1,31 @@
+const crypto = require("crypto");
 const { readSecrets, writeSecrets } = require("./secrets");
 
-function set(key, value) {
+function set(password, key, value) {
+  const cryptoKey = crypto.createCipher("aes-128-cbc", password);
+  let encryptedValue = cryptoKey.update(value, "utf8", "hex");
+  encryptedValue += cryptoKey.final("hex");
+
   const secrets = readSecrets();
-  secrets[key] = value;
+  secrets[key] = encryptedValue;
   writeSecrets(secrets);
 }
 
-function unset(key) {
+function unset(password, key) {
   const secrets = readSecrets();
   delete secrets[key];
   writeSecrets(secrets);
 }
 
-function get(key) {
+function get(password, key) {
   const secrets = readSecrets();
   const secret = secrets[key];
-  console.log(secret);
+
+  const cryptoKey = crypto.createDecipher("aes-128-cbc", password);
+  let decryptedSecret = cryptoKey.update(secret, "hex", "utf8");
+  decryptedSecret += cryptoKey.final("utf8");
+
+  console.log(decryptedSecret);
 }
 
 const commands = {
@@ -24,10 +34,10 @@ const commands = {
   unset
 };
 
-exports.executeCommand = function executeCommand(action, key, value) {
+exports.executeCommand = function executeCommand(password, action, key, value) {
   const command = commands[action];
   if (!command) {
     throw new Error("unknown action");
   }
-  command(key, value);
+  command(password, key, value);
 };
