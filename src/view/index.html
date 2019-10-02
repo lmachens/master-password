@@ -8,20 +8,61 @@
   </head>
   <body>
     <h1>Welcome to Master Password</h1>
-    <input type="text" id="secretInput" placeholder="Enter secret name" />
-    <button id="submit">Get Secret</button>
+    <form id="submitForm">
+      <input
+        type="text"
+        id="secretInput"
+        placeholder="Enter secret name"
+        autocomplete="off"
+      />
+      <button>Get Secret</button>
+    </form>
+
     <div id="showSecret"></div>
+
+    <form id="setSecretForm">
+      <input type="text" id="key" />
+      <input type="password" id="value" />
+      <button>Set Secret</button>
+    </form>
 
     <script>
       const secretInput = document.querySelector("#secretInput");
-      const submit = document.querySelector("#submit");
       const showSecret = document.querySelector("#showSecret");
+      const submitForm = document.querySelector("#submitForm");
+      const inputKey = document.querySelector("#key");
+      const inputValue = document.querySelector("#value");
+      const setSecretForm = document.querySelector("#setSecretForm");
 
-      function handleClick() {
-        showSecret.innerHTML = secretInput.value;
-        console.log(secretInput.value);
+      function handleSubmit(event) {
+        event.preventDefault();
+
+        const url = `/${secretInput.value}`;
+        fetch(url)
+          .then(response => response.text())
+          .then(secret => {
+            showSecret.innerHTML = secret;
+          });
       }
-      submit.addEventListener("click", handleClick);
+
+      function handleCreate(event) {
+        event.preventDefault();
+
+        const secret = {};
+        secret[inputKey.value] = inputValue.value;
+        console.log(secret);
+      }
+
+      // async function handleSubmit(event) {
+      //   event.preventDefault();
+
+      //   const url = `/${secretInput.value}`;
+      //   const secret = await fetch(url).then(response => response.text());
+      //   showSecret.innerHTML = secret;
+      // }
+
+      submitForm.addEventListener("submit", handleSubmit);
+      setSecretForm.addEventListener("submit", handleCreate);
     </script>
   </body>
 </html>
