@@ -1,21 +1,25 @@
 const http = require("http");
 const url = require("url");
+const fs = require("fs");
 
 const { get } = require("./lib/commands");
 
 const server = http.createServer(function(request, response) {
-  // use url.parse to seperate url to pathname and search
+  const { pathname } = url.parse(request.url);
 
-  if (request.url === "/favicon.ico") {
+  if (pathname === "/favicon.ico") {
+    response.writeHead(404);
     return response.end();
   }
-  if (request.url === "/") {
-    return response.end("Welcome to my secrets manager");
+  if (pathname === "/") {
+    response.writeHead(200, { "Content-Type": "text/html" });
+    const content = fs.readFileSync("src/view/index.html", "utf-8");
+    return response.end(content);
   }
 
-  console.log(request.url);
+  console.log(pathname);
   try {
-    const path = request.url.slice(1);
+    const path = pathname.slice(1);
     const secret = get("asd", path);
 
     response.write(secret);
@@ -26,4 +30,6 @@ const server = http.createServer(function(request, response) {
   response.end();
 });
 
-server.listen(8080);
+server.listen(8080, () => {
+  console.log("Server listens on http://localhost:8080");
+});

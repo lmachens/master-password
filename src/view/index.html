@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Master Password</title>
+  </head>
+  <body>
+    <h1>Welcome to Master Password</h1>
+    <input type="text" id="secretInput" placeholder="Enter secret name" />
+    <button id="submit">Get Secret</button>
+    <div id="showSecret"></div>
+
+    <script>
+      const secretInput = document.querySelector("#secretInput");
+      const submit = document.querySelector("#submit");
+      const showSecret = document.querySelector("#showSecret");
+
+      function handleClick() {
+        showSecret.innerHTML = secretInput.value;
+        console.log(secretInput.value);
+      }
+      submit.addEventListener("click", handleClick);
+    </script>
+  </body>
+</html>
