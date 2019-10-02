@@ -15,6 +15,7 @@
         id="secretInput"
         placeholder="Enter secret name"
         autocomplete="off"
+        name="key"
       />
       <button>Get Secret</button>
     </form>
@@ -28,28 +29,28 @@
         id="key"
         placeholder="Enter secret name"
         autocomplete="off"
+        name="key"
       />
       <input
         type="password"
         id="value"
         placeholder="Enter secret value"
         autocomplete="off"
+        name="value"
       />
       <button>Set Secret</button>
     </form>
 
     <script>
-      const secretInput = document.querySelector("#secretInput");
       const showSecret = document.querySelector("#showSecret");
       const submitForm = document.querySelector("#submitForm");
-      const inputKey = document.querySelector("#key");
-      const inputValue = document.querySelector("#value");
       const setSecretForm = document.querySelector("#setSecretForm");
 
       function handleSubmit(event) {
         event.preventDefault();
 
-        const url = `/${secretInput.value}`;
+        const data = Object.fromEntries(new FormData(submitForm).entries());
+        const url = `/${data.key}`;
         fetch(url)
           .then(response => response.text())
           .then(secret => {
@@ -59,11 +60,11 @@
 
       function handleCreate(event) {
         event.preventDefault();
-
-        const url = `/${inputKey.value}`;
+        const data = Object.fromEntries(new FormData(setSecretForm).entries());
+        const url = `/${data.key}`;
         fetch(url, {
           method: "POST",
-          body: inputValue.value
+          body: data.value
         });
       }
 
