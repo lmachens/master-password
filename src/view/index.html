@@ -8,6 +8,7 @@
   </head>
   <body>
     <h1>Welcome to Master Password</h1>
+    <h3>Get secret</h3>
     <form id="submitForm">
       <input
         type="text"
@@ -20,9 +21,20 @@
 
     <div id="showSecret"></div>
 
+    <h3>Set secret</h3>
     <form id="setSecretForm">
-      <input type="text" id="key" />
-      <input type="password" id="value" />
+      <input
+        type="text"
+        id="key"
+        placeholder="Enter secret name"
+        autocomplete="off"
+      />
+      <input
+        type="password"
+        id="value"
+        placeholder="Enter secret value"
+        autocomplete="off"
+      />
       <button>Set Secret</button>
     </form>
 
@@ -48,9 +60,11 @@
       function handleCreate(event) {
         event.preventDefault();
 
-        const secret = {};
-        secret[inputKey.value] = inputValue.value;
-        console.log(secret);
+        const url = `/${inputKey.value}`;
+        fetch(url, {
+          method: "POST",
+          body: inputValue.value
+        });
       }
 
       // async function handleSubmit(event) {
