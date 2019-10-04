@@ -1,10 +1,11 @@
 const http = require("http");
 const url = require("url");
 const fs = require("fs");
+const { initDatabase } = require("./lib/database");
 
 const { get, set } = require("./lib/commands");
 
-const server = http.createServer(function(request, response) {
+const server = http.createServer(async function(request, response) {
   const { pathname } = url.parse(request.url);
   console.log(request.url, request.method);
 
@@ -21,7 +22,7 @@ const server = http.createServer(function(request, response) {
   try {
     const path = pathname.slice(1);
     if (request.method === "GET") {
-      const secret = get("asd", path);
+      const secret = await get("asd", path);
       response.end(secret);
     } else if (request.method === "POST") {
       let body = "";
@@ -29,9 +30,9 @@ const server = http.createServer(function(request, response) {
         body += data;
         console.log("Partial body: " + body);
       });
-      request.on("end", function() {
+      request.on("end", async function() {
         console.log("Body: " + body);
-        set("asd", path, body);
+        await set("asd", path, body);
         response.end(`Set ${path}`);
       });
     }
@@ -40,6 +41,10 @@ const server = http.createServer(function(request, response) {
   }
 });
 
-server.listen(8080, () => {
-  console.log("Server listens on http://localhost:8080");
+initDatabase().then(() => {
+  console.log("Database connected");
+
+  server.listen(8080, () => {
+    console.log("Server listens on http://localhost:8080");
+  });
 });

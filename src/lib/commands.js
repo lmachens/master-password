@@ -1,28 +1,32 @@
 const crypto = require("crypto");
-const { readSecrets, writeSecrets } = require("./secrets");
+const { getCollection } = require("./database");
 
-function set(password, key, value) {
+async function set(password, key, value) {
+  const secretsCollection = await getCollection("secrets");
+
   const cryptoKey = crypto.createCipher("aes-128-cbc", password);
   let encryptedValue = cryptoKey.update(value, "utf8", "hex");
   encryptedValue += cryptoKey.final("hex");
 
-  const secrets = readSecrets();
-  secrets[key] = encryptedValue;
-  writeSecrets(secrets);
+  await secretsCollection.insertOne({ key, value: encryptedValue });
+  // ToDo: Update existing secret  (upsert)
 }
 
-function unset(password, key) {
-  const secrets = readSecrets();
-  delete secrets[key];
-  writeSecrets(secrets);
+async function unset(password, key) {
+  const secretsCollection = await getCollection("secrets");
+
+  if (!get(password, key)) {
+    throw new Error("No access to secret");
+  }
+  await secretsCollection.deleteOne({ key });
 }
 
-function get(password, key) {
-  const secrets = readSecrets();
-  const secret = secrets[key];
+async function get(password, key) {
+  const secretsCollection = await getCollection("secrets");
+  const secret = await secretsCollection.findOne({ key });
 
   const cryptoKey = crypto.createDecipher("aes-128-cbc", password);
-  let decryptedSecret = cryptoKey.update(secret, "hex", "utf8");
+  let decryptedSecret = cryptoKey.update(secret.value, "hex", "utf8");
   decryptedSecret += cryptoKey.final("utf8");
 
   return decryptedSecret;
