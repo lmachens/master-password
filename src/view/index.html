@@ -12,7 +12,6 @@
     <form id="submitForm">
       <input
         type="text"
-        id="secretInput"
         placeholder="Enter secret name"
         autocomplete="off"
         name="key"
@@ -26,14 +25,12 @@
     <form id="setSecretForm">
       <input
         type="text"
-        id="key"
         placeholder="Enter secret name"
         autocomplete="off"
         name="key"
       />
       <input
         type="password"
-        id="value"
         placeholder="Enter secret value"
         autocomplete="off"
         name="value"
@@ -45,7 +42,6 @@
     <form id="removeSecretForm">
       <input
         type="text"
-        id="removeSecretInput"
         placeholder="Enter secret name"
         autocomplete="off"
         name="key"
@@ -95,6 +91,7 @@
           new FormData(removeSecretForm).entries()
         );
         const url = `/${data.key}`;
+
         fetch(url, {
           method: "DELETE"
         });
