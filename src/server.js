@@ -3,7 +3,7 @@ const url = require("url");
 const fs = require("fs");
 const { initDatabase } = require("./lib/database");
 
-const { get, set } = require("./lib/commands");
+const { get, set, unset } = require("./lib/commands");
 
 const server = http.createServer(async function(request, response) {
   const { pathname } = url.parse(request.url);
@@ -35,6 +35,9 @@ const server = http.createServer(async function(request, response) {
         await set("asd", path, body);
         response.end(`Set ${path}`);
       });
+    } else if (request.method === "DELETE") {
+      await unset("asd", path);
+      response.end(`Delete ${path}`);
     }
   } catch (error) {
     response.end("Can not read secret");

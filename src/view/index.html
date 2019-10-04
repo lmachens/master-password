@@ -41,10 +41,23 @@
       <button>Set Secret</button>
     </form>
 
+    <h3>Remove secret</h3>
+    <form id="removeSecretForm">
+      <input
+        type="text"
+        id="removeSecretInput"
+        placeholder="Enter secret name"
+        autocomplete="off"
+        name="key"
+      />
+      <button>Remove Secret</button>
+    </form>
+
     <script>
       const showSecret = document.querySelector("#showSecret");
       const submitForm = document.querySelector("#submitForm");
       const setSecretForm = document.querySelector("#setSecretForm");
+      const removeSecretForm = document.querySelector("#removeSecretForm");
 
       function handleSubmit(event) {
         event.preventDefault();
@@ -76,8 +89,20 @@
       //   showSecret.innerHTML = secret;
       // }
 
+      function handleRemove(event) {
+        event.preventDefault();
+        const data = Object.fromEntries(
+          new FormData(removeSecretForm).entries()
+        );
+        const url = `/${data.key}`;
+        fetch(url, {
+          method: "DELETE"
+        });
+      }
+
       submitForm.addEventListener("submit", handleSubmit);
       setSecretForm.addEventListener("submit", handleCreate);
+      removeSecretForm.addEventListener("submit", handleRemove);
     </script>
   </body>
 </html>
