@@ -59,7 +59,7 @@
         event.preventDefault();
 
         const data = Object.fromEntries(new FormData(submitForm).entries());
-        const url = `/${data.key}`;
+        const url = `/api/${data.key}`;
         fetch(url)
           .then(response => response.text())
           .then(secret => {
@@ -70,7 +70,7 @@
       function handleCreate(event) {
         event.preventDefault();
         const data = Object.fromEntries(new FormData(setSecretForm).entries());
-        const url = `/${data.key}`;
+        const url = `/api/${data.key}`;
         fetch(url, {
           method: "POST",
           body: data.value
@@ -90,7 +90,7 @@
         const data = Object.fromEntries(
           new FormData(removeSecretForm).entries()
         );
-        const url = `/${data.key}`;
+        const url = `/api/${data.key}`;
 
         fetch(url, {
           method: "DELETE"

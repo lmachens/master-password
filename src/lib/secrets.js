@@ -1,5 +1,6 @@
-const fs = require("fs");
+// Unused
 
+const fs = require("fs");
 const fileName = "secrets.json";
 
 function readSecrets() {

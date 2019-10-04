@@ -1,53 +1,57 @@
-const http = require("http");
-const url = require("url");
 const fs = require("fs");
 const { initDatabase } = require("./lib/database");
-
+const express = require("express");
 const { get, set, unset } = require("./lib/commands");
 
-const server = http.createServer(async function(request, response) {
-  const { pathname } = url.parse(request.url);
-  console.log(request.url, request.method);
+const app = express();
+const port = 8080;
 
-  if (pathname === "/favicon.ico") {
-    response.writeHead(404);
-    return response.end();
-  }
-  if (pathname === "/") {
-    response.writeHead(200, { "Content-Type": "text/html" });
-    const content = fs.readFileSync("src/view/index.html", "utf-8");
-    return response.end(content);
-  }
+app.get("/", (request, response) => {
+  response.writeHead(200, { "Content-Type": "text/html" });
+  const content = fs.readFileSync("src/view/index.html", "utf-8");
+  response.end(content);
+});
 
+app.get("/favicon.ico", (request, response) => {
+  response.writeHead(404);
+  response.end();
+});
+
+app.get("/api/:path", async (request, response) => {
   try {
-    const path = pathname.slice(1);
-    if (request.method === "GET") {
-      const secret = await get("asd", path);
-      response.end(secret);
-    } else if (request.method === "POST") {
-      let body = "";
-      request.on("data", function(data) {
-        body += data;
-        console.log("Partial body: " + body);
-      });
-      request.on("end", async function() {
-        console.log("Body: " + body);
-        await set("asd", path, body);
-        response.end(`Set ${path}`);
-      });
-    } else if (request.method === "DELETE") {
-      await unset("asd", path);
-      response.end(`Delete ${path}`);
-    }
+    const secret = await get("asd", request.params.path);
+    response.end(secret);
   } catch (error) {
-    response.end("Can not read secret");
+    response.end("Error");
   }
+});
+
+app.post("/api/:path", async (request, response) => {
+  try {
+    let body = "";
+    request.on("data", function(data) {
+      body += data;
+      console.log("Partial body: " + body);
+    });
+    request.on("end", async function() {
+      console.log("Body: " + body);
+      await set("asd", request.params.path, body);
+      response.end(`Set ${request.params.path}`);
+    });
+  } catch (error) {
+    response.end("Error");
+  }
+});
+
+app.delete("/api/:path", async (request, response) => {
+  await unset("asd", request.params.path);
+  response.end(`Delete ${request.params.path}`);
 });
 
 initDatabase().then(() => {
   console.log("Database connected");
 
-  server.listen(8080, () => {
-    console.log("Server listens on http://localhost:8080");
+  app.listen(port, () => {
+    console.log(`Server listens on http://localhost:${port}`);
   });
 });
